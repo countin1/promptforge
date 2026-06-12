@@ -83,35 +83,21 @@ class BayesianSearch:
 
     def _gp_predict(self, X_train: np.ndarray, y_train: np.ndarray,
                      X_test: np.ndarray, length_scale: float = 1.0):
-        """简化高斯过程预测（RBF 核）"""
-        n_train = len(X_train)
+        """简化高斯过程预测（RBF 核）— 向量化版本"""
+        # 训练集核矩阵 (向量化)
+        dist_train = np.sum((X_train[:, None] - X_train[None, :]) ** 2, axis=-1)
+        K = np.exp(-dist_train / (2 * length_scale ** 2)) + np.eye(len(X_train)) * 0.01
 
-        # 训练集核矩阵
-        K = np.zeros((n_train, n_train))
-        for i in range(n_train):
-            for j in range(n_train):
-                dist = np.sum((X_train[i] - X_train[j]) ** 2)
-                K[i, j] = np.exp(-dist / (2 * length_scale ** 2))
-        K += np.eye(n_train) * 0.01
-
-        # 测试集与训练集的核
-        n_test = len(X_test)
-        K_star = np.zeros((n_test, n_train))
-        for i in range(n_test):
-            for j in range(n_train):
-                dist = np.sum((X_test[i] - X_train[j]) ** 2)
-                K_star[i, j] = np.exp(-dist / (2 * length_scale ** 2))
+        # 测试集与训练集的核 (向量化)
+        dist_test = np.sum((X_test[:, None] - X_train[None, :]) ** 2, axis=-1)
+        K_star = np.exp(-dist_test / (2 * length_scale ** 2))
 
         # 预测
         K_inv = np.linalg.inv(K)
         mu = K_star @ K_inv @ y_train
 
-        K_star_star = np.zeros((n_test, n_test))
-        for i in range(n_test):
-            for j in range(n_test):
-                dist = np.sum((X_test[i] - X_test[j]) ** 2)
-                K_star_star[i, j] = np.exp(-dist / (2 * length_scale ** 2))
-
+        dist_test_test = np.sum((X_test[:, None] - X_test[None, :]) ** 2, axis=-1)
+        K_star_star = np.exp(-dist_test_test / (2 * length_scale ** 2))
         sigma = np.sqrt(np.abs(np.diag(K_star_star - K_star @ K_inv @ K_star.T)))
         return mu, sigma
 
