@@ -1,0 +1,22 @@
+[project]
+name = "promptforge"
+version = "0.1.0"
+description = "Automatic prompt optimization framework with grid search, Bayesian optimization, and genetic algorithms"
+license = "MIT"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.24.0",
+    "scipy>=1.10.0",
+    "matplotlib>=3.7.0",
+    "openai>=1.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = ["pytest", "ruff"]
+
+[tool.ruff]
+line-length = 120
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
