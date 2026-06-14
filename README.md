@@ -1,3 +1,7 @@
+[![Python](https://img.shields.io/badge/Python-3.10%2B-blue)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![CI](https://github.com/countin1/promptforge/actions/workflows/ci.yml/badge.svg)](https://github.com/countin1/promptforge/actions/workflows/ci.yml)
+
 # 🔥 PromptForge — Prompt 自动优化框架
 
 > 类 DSPy 的 Prompt 模板搜索引擎，给定评测集自动找到最优 prompt 结构。
