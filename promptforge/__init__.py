@@ -18,7 +18,7 @@ PromptForge — Prompt 自动优化框架
     print(result.best_config, result.best_score)
 """
 
-__version__ = "1.0.0"
+__version__ = "0.1.0"
 __author__ = "countin1"
 
 from .core.templates import PromptTemplates

@@ -125,10 +125,10 @@ class GeneticSearch:
             # 生成下一代
             new_population = elites.copy()  # 保留精英
             while len(new_population) < population_size:
-                # 选择父母（锦标赛选择）
-                i1, i2 = np.random.choice(len(elites), 2, replace=False)
-                parent1 = elites[i1]
-                parent2 = elites[i2]
+                # 选择父母（锦标赛选择 — 从全群体中选）
+                i1, i2 = np.random.choice(len(population), 2, replace=False)
+                parent1 = population[i1]
+                parent2 = population[i2]
 
                 # 交叉
                 child = self._crossover(parent1, parent2)

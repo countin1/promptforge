@@ -92,13 +92,15 @@ class BayesianSearch:
         dist_test = np.sum((X_test[:, None] - X_train[None, :]) ** 2, axis=-1)
         K_star = np.exp(-dist_test / (2 * length_scale ** 2))
 
-        # 预测
-        K_inv = np.linalg.inv(K)
-        mu = K_star @ K_inv @ y_train
+        # 预测 — 用 solve 代替 inv 以提高数值稳定性
+        alpha = np.linalg.solve(K, y_train)
+        mu = K_star @ alpha
 
         dist_test_test = np.sum((X_test[:, None] - X_test[None, :]) ** 2, axis=-1)
         K_star_star = np.exp(-dist_test_test / (2 * length_scale ** 2))
-        sigma = np.sqrt(np.abs(np.diag(K_star_star - K_star @ K_inv @ K_star.T)))
+        # 用 solve 计算 K_inv @ K_star.T 的每一列
+        V = np.linalg.solve(K, K_star.T)
+        sigma = np.sqrt(np.abs(np.diag(K_star_star - K_star @ V)))
         return mu, sigma
 
     def _generate_random_config(self) -> Dict[str, str]:

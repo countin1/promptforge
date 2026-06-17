@@ -21,18 +21,23 @@ class ModelClient:
         self.temperature = temperature
 
     def __call__(self, prompt: str) -> str:
-        """调用模型"""
-        try:
-            resp = self.client.chat.completions.create(
-                model=self.model,
-                max_tokens=self.max_tokens,
-                temperature=self.temperature,
-                messages=[{"role": "user", "content": prompt}],
-                timeout=60,
-            )
-            return resp.choices[0].message.content
-        except Exception as e:
-            return f"[ERROR] {e}"
+        """调用模型（含重试逻辑）"""
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                resp = self.client.chat.completions.create(
+                    model=self.model,
+                    max_tokens=self.max_tokens,
+                    temperature=self.temperature,
+                    messages=[{"role": "user", "content": prompt}],
+                    timeout=60,
+                )
+                return resp.choices[0].message.content
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    time.sleep(2 ** attempt)  # 指数退避
+                    continue
+                return f"[ERROR] {e}"
 
 
 def create_client_from_env(model: str = "mimo-v2.5-pro") -> ModelClient:

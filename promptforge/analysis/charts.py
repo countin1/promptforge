@@ -9,6 +9,8 @@
 """
 
 import os
+from typing import Dict, List
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib
@@ -164,7 +166,3 @@ def plot_dimension_heatmap(by_dimension: Dict, model_name: str, output_dir: str 
     plt.savefig(path, dpi=150)
     plt.close()
     return path
-
-
-# 类型提示
-from typing import Dict, List

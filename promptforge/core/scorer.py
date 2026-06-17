@@ -104,10 +104,13 @@ class Scorer:
             client: OpenAI 客户端（ai 模式需要）
             model_name: 评分模型名称（ai 模式需要）
         """
+        import warnings
         self.mode = mode
         if mode == "ai" and client:
             self._score_fn = create_ai_scorer(client, model_name)
         else:
+            if mode == "ai" and not client:
+                warnings.warn("mode='ai' 但未提供 client，回退到 rule 模式", stacklevel=2)
             self._score_fn = None
 
     def score(self, question: str, answer: str, expected_hint: str = "") -> int:

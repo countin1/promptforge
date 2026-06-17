@@ -96,7 +96,6 @@ class GridSearch:
 
         # 统计比较
         from scipy import stats as sp_stats
-        from scipy.stats import norm
 
         best_name = max(all_results, key=lambda k: all_results[k]["mean"])
         baseline_scores = np.array(all_results.get("baseline", list(all_results.values())[0])["scores"])
@@ -107,7 +106,9 @@ class GridSearch:
                 continue
             scores = np.array(data["scores"])
             t_stat, p_val = sp_stats.ttest_rel(scores, baseline_scores)
-            d = (scores.mean() - baseline_scores.mean()) / np.sqrt((scores.var() + baseline_scores.var()) / 2) if (scores.var() + baseline_scores.var()) > 0 else 0
+            # 配对 Cohen's d: 使用差值的均值/标准差
+            diffs = scores - baseline_scores
+            d = diffs.mean() / diffs.std() if diffs.std() > 0 else 0
             comparisons.append({
                 "template": name,
                 "mean": round(float(scores.mean()), 2),
