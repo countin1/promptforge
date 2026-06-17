@@ -97,6 +97,26 @@ promptforge/
 | 贝叶斯优化 | 高效、智能选择 | 需要实现 GP | 搜索空间大 |
 | 遗传算法 | 简单、并行友好 | 不保证全局最优 | 超大搜索空间 |
 
+## 🌐 Web 界面
+
+不用写代码也能用！启动 Streamlit Web 界面：
+
+```bash
+pip install -r requirements.txt
+export ANTHROPIC_AUTH_TOKEN=your_key
+streamlit run app.py
+```
+
+## ☁️ 部署到 Streamlit Cloud
+
+1. 将代码推送到 GitHub 仓库
+2. 去 [share.streamlit.io](https://share.streamlit.io) 连接仓库并部署
+3. 在 App settings -> Secrets 中添加：
+
+```toml
+ANTHROPIC_AUTH_TOKEN = "your-api-key"
+```
+
 ## 📚 依赖
 
 - numpy >= 1.24.0
@@ -104,6 +124,8 @@ promptforge/
 - matplotlib >= 3.7.0
 - openai >= 1.0.0
 - pyyaml >= 6.0
+- streamlit >= 1.28.0
+- pandas >= 2.0.0
 
 ## 📄 License
 
